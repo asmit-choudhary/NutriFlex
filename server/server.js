@@ -3,11 +3,14 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 
+const authRoutes = require('./routes/authRoutes');
+
 connectDB();  // connect to mongoDB when server starts
 
 const app = express();
 app.use(cors()); // allows request from the REACT app
 app.use(express.json());  // lets us read JSON in request bodies
+app.use('/api/auth', authRoutes); // any request with /api/auth.. gets handled to authRoutes
 
 // a simple test route to confirm the server is alive 
 app.get('/api/health', (req, res) => {
