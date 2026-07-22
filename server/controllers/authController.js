@@ -77,4 +77,9 @@ const loginUser = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, loginUser };
+// GET /api/auth/me
+const getMe = async (req, res) => {
+    res.json(req.user);  // req.user was already attached by the protect middleware 
+};
+
+module.exports = { registerUser, loginUser, getMe };
