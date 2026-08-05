@@ -7,6 +7,8 @@ const authRoutes = require('./routes/authRoutes');
 
 const practitionerRoutes = require('./routes/practitionerRoutes');
 
+const bookingRoutes = require('./routes/bookingRoutes');
+
 connectDB();  // connect to mongoDB when server starts
 
 const app = express();
@@ -20,6 +22,8 @@ app.use('/api/practitioners', practitionerRoutes);
 app.get('/api/health', (req, res) => {
     res.json({status: 'ok', message: 'NutriFlex server is running' });
 });
+
+app.use('/api/bookings', bookingRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port  ${PORT}`));
