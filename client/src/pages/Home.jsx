@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import Navbar from "../components/Navbar"
 import Button from "../components/Button"
+import useAuthStore from "../store/authStore"
 
 const pillers = [
     { tag: 'Yoga', title: 'Flow & flexibility', desc: 'Live and on-demand classes across styles and levels.' },
@@ -10,6 +11,8 @@ const pillers = [
 ]
 
 function Home() {
+    const user = useAuthStore((state) => state.user)
+
     return (
         <div className="min-h-screen bg-bg">
             <Navbar />
@@ -60,9 +63,13 @@ function Home() {
 
             {/* Footer CTA*/}
             <section className="text-center py-20 px-8">
-                <h2 className="font-display text-3xl text-text mb-6">Ready to begin?</h2>
-                <Link to="/login">
-                    <Button variant="primary">Create your account</Button>
+                <h2 className="font-display text-3xl text-text mb-6">
+                    {user ? 'Ready for you next session?' : 'Ready to begin?'}
+                </h2>
+                <Link to={user ? '/booking' : '/login'}>
+                    <Button variant="primary">
+                        {user ? 'Book a consultation' : 'Create your account'}
+                    </Button>
                 </Link>
             </section>
         </div>
