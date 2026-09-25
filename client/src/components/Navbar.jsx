@@ -30,6 +30,13 @@ function Navbar() {
                     <span className='text-sm text-text-muted sm:incline'>
                         Hi, {user.name.split(' ')[0]}
                     </span>
+
+                    {user.role === 'member' && (
+                        <Link to="/my-bookings" className="text-sm font-semibold text-text-muted">
+                            My Bookings
+                        </Link>
+                    )}
+
                     {user.role == 'practitioner' && (
                         <Link 
                             to="/dashboard"
