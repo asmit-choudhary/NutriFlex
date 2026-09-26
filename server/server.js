@@ -9,6 +9,8 @@ const practitionerRoutes = require('./routes/practitionerRoutes');
 
 const bookingRoutes = require('./routes/bookingRoutes');
 
+const subscriptionRoutes = require('./routes/subscriptionRoutes');
+
 connectDB();  // connect to mongoDB when server starts
 
 const app = express();
@@ -24,6 +26,8 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api/bookings', bookingRoutes);
+
+app.use('/api/subscriptions', subscriptionRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port  ${PORT}`));
