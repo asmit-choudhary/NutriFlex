@@ -3,8 +3,9 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Booking from './pages/Booking'
 import MyBookings from './pages/MyBookings'
-import Dashboard from './pages/dashboard'
+import Dashboard from './pages/Dashboard'
 import ProtectedRoute from './components/ProtectedRoute'
+import Payment from './pages/Payment'
 
 function App(){
   return (
@@ -33,6 +34,14 @@ function App(){
           <ProtectedRoute allowedRoles={['practitioner']}>
             <Dashboard />
           </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/payment"
+        element={
+        <ProtectedRoute allowedRoles={['member']}>
+          <Payment />
+        </ProtectedRoute>
         }
       />
     </Routes>

@@ -1,9 +1,21 @@
+import { useState, useEffect } from 'react'
+import api from '../api/axios'
 import { Link, useNavigate } from 'react-router-dom'
 import useAuthStore from '../store/authStore'
 
 function Navbar() {
 
     const { user, logout } = useAuthStore()
+    const [plan, setPlan] = useState(null)
+
+    useEffect(() => {
+        if (user?.role === 'member'){
+            api.get('/subscriptions/me')
+                .then((res) => setPlan(res.data)) // will be null if they've never subscribed
+                .catch(() => setPlan(null))
+        }
+    }, [user])
+
     const navigate = useNavigate()
 
     const handleLogout = () => {
@@ -22,12 +34,17 @@ function Navbar() {
                 <span>Strength</span>
                 <span>Meditation</span>
                 <span>Therapy</span>
-                <span>Pricing</span>
+                <Link to="/payment">Pricing</Link>
             </div>
 
             {user ? (
                 <div className='flex items-center gap-4'>
-                    <span className='text-sm text-text-muted sm:incline'>
+                    {plan && (
+                        <span className="text-xs font-semibold bg-accent-2 text-surface px-3 py-1 rounded-full capitalize">
+                            {plan.plan} plan
+                        </span>
+                    )}
+                    <span className='text-sm text-text-muted sm:inline'>
                         Hi, {user.name.split(' ')[0]}
                     </span>
 
