@@ -55,13 +55,19 @@ function Navbar() {
                     )}
 
                     {user.role == 'practitioner' && (
-                        <Link 
-                            to="/dashboard"
-                            className='text-sm font-semibold text-accent'    
-                        >
-                            Dashboard
-                        </Link>
+                        <>
+                            <Link 
+                                to="/dashboard"
+                                className='text-sm font-semibold text-accent'    
+                            >
+                                Dashboard
+                            </Link>
+                            <Link to="/profile-setup" className="text-sm font-semibold text-text-muted">
+                                My profile
+                            </Link>
+                        </>
                     )}
+
                     <button
                         onClick={handleLogout}
                         className='px-5 py-2.5 rounded-brand text-sm font-semibold border border-border text-text hover:bg-surface-2'

@@ -54,4 +54,14 @@ const getPractitionersById = async (req, res) => {
     }
 };
 
-module.exports = { upsertMyProfile, getPractitioners, getPractitionersById };
+// GET /api/practitioners/profile/me (practitioner loads their own profile into the form)
+const getMyProfile = async (req, res) => {
+    try{
+        const profile = await PractitionerProfile.findOne({ user: req.user._id });
+        res.json(profile); // null if haven't created one yet.
+    } catch(error){
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { upsertMyProfile, getPractitioners, getPractitionersById, getMyProfile };

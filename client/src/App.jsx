@@ -6,6 +6,7 @@ import MyBookings from './pages/MyBookings'
 import Dashboard from './pages/Dashboard'
 import ProtectedRoute from './components/ProtectedRoute'
 import Payment from './pages/Payment'
+import ProfileSetup from './pages/ProfileSetUp'
 
 function App(){
   return (
@@ -41,6 +42,14 @@ function App(){
         element={
         <ProtectedRoute allowedRoles={['member']}>
           <Payment />
+        </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile-setup"
+        element={
+        <ProtectedRoute allowedRoles={['practitioner']}>
+          <ProfileSetup />
         </ProtectedRoute>
         }
       />

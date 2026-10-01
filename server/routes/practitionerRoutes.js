@@ -4,6 +4,7 @@ const {
     upsertMyProfile,
     getPractitioners,
     getPractitionersById,
+    getMyProfile,
 } = require('../controllers/practitionerController');
 const { protect, requireRole } = require('../middleware/authMiddleware');
 
@@ -13,5 +14,7 @@ router.get('/:id', getPractitionersById);
 
 // protected - only logged-in practitioners can create/update their own profile 
 router.post('/profile', protect, requireRole('practitioner'), upsertMyProfile);
+
+router.get('/profile/me' , protect, requireRole('practitioner'), getMyProfile);
 
 module.exports = router;

@@ -5,7 +5,7 @@ const practitionerProfileScheme = new mongoose.Schema(
         user: {
             type: mongoose.Schema.Types.ObjectId,  // store just the User's_id, not the full copy
             ref: 'User',  // tells mongoose this ID points to the User model
-            required: true,  
+            required: true,
             unique: true, // one profile per user - a partitioner can't have 2 profile
         },
         specialty: {
@@ -29,16 +29,16 @@ const practitionerProfileScheme = new mongoose.Schema(
         },
         availability: [
             {
-                days: {
+                day: {
                     type: String,
                     enum: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
                 },
-                slots: [String],  // e.g. ["10:00", "11:30", "3.00"]
+                slots: [String],
             },
         ],
         isApproved: {
             type: Boolean,
-            default: false, //future-proofing: admin can approve practitioners before they're publicly listed
+            default: true, //switch back to false once an admin approval flow exists
         },
     },
     { timestamps: true }
