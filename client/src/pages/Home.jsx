@@ -45,7 +45,7 @@ function Home() {
                 <h2 className="font-display text-3xl text-text mb-8">
                     Four practices, one plan
                 </h2>
-                <div className="grid sm:grid-cols-2 mb:grid-cols-4 gap-5">
+                <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-5">
                     {pillers.map((p) => (
                         <div 
                             key={p.tag}
