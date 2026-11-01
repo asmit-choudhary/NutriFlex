@@ -1,28 +1,63 @@
 const Booking = require('../models/Booking');
 const User = require('../models/User');
+const PractitionerProfile = require('../models/PractitionerProfile');
 
-// POST /api/bookings (member create a booking)
+// POST /api/bookings  (member creates a booking)
 const createBooking = async (req, res) => {
-    try{
-        const { practitioner, date, timeSlot, notes } = req.body;
+  try {
+    const { practitioner, date, timeSlot, notes } = req.body;
 
-        const practitionerUser = await User.findOne({ _id: practitioner, role: 'practitioner', });
-        if(!practitionerUser){
-            return res.status(400).json({ message: 'Invalid Practitioner'});
-        }
-
-        const booking = await Booking.create({
-            member: req.user._id,  // taken from the logged-in user, never trusted from req.body
-            practitioner,
-            date,
-            timeSlot,
-            notes,
-        });
-
-        res.status(200).json(booking);
-    } catch (error){
-        res.status(500).json({ message: error.message });
+    // 1. the practitioner must be a real user with role "practitioner"
+    const practitionerUser = await User.findOne({ _id: practitioner, role: 'practitioner' });
+    if (!practitionerUser) {
+      return res.status(400).json({ message: 'Invalid practitioner' });
     }
+
+    // 2. the date must be valid and not in the past
+    const bookingDate = new Date(date);
+    if (isNaN(bookingDate.getTime())) {
+      return res.status(400).json({ message: 'Invalid date' });
+    }
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+    if (bookingDate < today) {
+      return res.status(400).json({ message: 'You cannot book a date in the past' });
+    }
+
+    // 3. the practitioner must actually offer this day and time slot
+    const profile = await PractitionerProfile.findOne({ user: practitioner });
+    if (!profile) {
+      return res.status(400).json({ message: 'This practitioner has not set up a profile yet' });
+    }
+    const dayLabel = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][bookingDate.getUTCDay()];
+    const dayAvailability = profile.availability.find((a) => a.day === dayLabel);
+    if (!dayAvailability || !dayAvailability.slots.includes(timeSlot)) {
+      return res.status(400).json({ message: 'That time slot is not available' });
+    }
+
+    // 4. nobody else may already hold this slot (cancelled bookings free it up)
+    const alreadyBooked = await Booking.findOne({
+      practitioner,
+      date: bookingDate,
+      timeSlot,
+      status: { $ne: 'cancelled' },
+    });
+    if (alreadyBooked) {
+      return res.status(409).json({ message: 'That slot has just been booked. Please pick another.' });
+    }
+
+    const booking = await Booking.create({
+      member: req.user._id,
+      practitioner,
+      date: bookingDate,
+      timeSlot,
+      notes,
+    });
+
+    res.status(201).json(booking);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 // GET /api/bookings/me (member views their own bookings)
